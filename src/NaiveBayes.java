@@ -35,6 +35,12 @@ public class NaiveBayes
 
     private double percision = 0.0;
     private double recall = 0.0;
+    private double posPercision = 0.0;
+    private double neuPercision = 0.0;
+    private double negPercision = 0.0;
+    private double posRecall = 0.0;
+    private double neuRecall = 0.0;
+    private double negRecall = 0.0;
     private double truePositives = 0.0;
     private double trueNegatives = 0.0;
     private double trueNeutrals = 0.0;
@@ -313,16 +319,14 @@ public class NaiveBayes
     public void classifyDocuments(LinkedList<String> testingData, int control)
     {
         this.control = control;
+        
 
         for (String line : testingData)
         {
             System.out.println(classify(line));
         }
 
-        percision = truePositives / (truePositives + falsePositives) * 100;
-        recall = truePositives / (truePositives + falseNegatives) * 100;
-        System.out.printf("\nPercision: %2.2f%%\n", percision);
-        System.out.printf("Recall: %2.2f%%\n", recall);
+        
     }
 
     public String classify(String review)
@@ -383,44 +387,69 @@ public class NaiveBayes
 
         if (positiveProbability > negativeProbability && positiveProbability > neutralProbability)
         {
-            if (control == 0)
-            {
-                truePositives++;
-                falseNegatives++;
-            }
-            else
-            {
-                falsePositives++;
-            }
+        	if (control == 0)
+        	{
+        		truePositives++;
+        	}
+        	if (control == 1)
+        	{
+        		falseNegatives++;
+        	}
+        	if (control == 2)
+        	{
+        		falseNeutrals++;
+        	}
             return "Classification: Positive";
         }
         else if (negativeProbability > positiveProbability && negativeProbability > neutralProbability)
         {
-            if (control == 1)
-            {
-                trueNegatives++;
-                falseNegatives++;
-            }
-            else
-            {
-                falsePositives++;
-            }
+        	if (control == 0)
+        	{
+        		falsePositives++;
+        	}
+        	if (control == 1)
+        	{
+        		trueNegatives++;
+        	}
+        	if (control == 2)
+        	{
+        		falseNeutrals++;
+        	}
             return "Classification: Negative";
         }
         else if (neutralProbability > positiveProbability && neutralProbability > negativeProbability)
         {
-            if (control == 2)
-            {
-                truePositives++;
-                falseNegatives++;
-            }
-            else
-            {
-                falsePositives++;
-            }
+        	if (control == 0)
+        	{
+        		falsePositives++;
+        	}
+        	if (control == 1)
+        	{
+        		falseNegatives++;
+        	}
+        	if (control == 2)
+        	{
+        		trueNeutrals++;
+        	}
             return "Classification: Neutral";
         }
         else
         	return null;
+    }
+    
+    public void metrics()
+    {
+    	posPercision = truePositives / (truePositives + falsePositives);
+        neuPercision = trueNeutrals/ (trueNeutrals + falseNeutrals);
+        negPercision = trueNegatives / (trueNegatives + falseNegatives);
+        percision = (posPercision + neuPercision + negPercision) / 3;
+        percision *= 100;
+        posRecall = truePositives / (truePositives + falseNegatives + falseNeutrals);
+        neuRecall = trueNeutrals / (trueNeutrals + falseNegatives + falsePositives);
+        negRecall = trueNegatives / (trueNegatives + falsePositives + falseNeutrals);
+        recall = (posRecall + neuRecall + negRecall) / 3;
+        recall *= 100;
+        System.out.printf("\nPercision: %2.2f%%\n", percision);
+        System.out.printf("Recall: %2.2f%%\n", recall);
     }
 }

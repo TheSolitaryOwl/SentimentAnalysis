@@ -9,7 +9,16 @@ public class Main
         NaiveBayes naiveBayes = new NaiveBayes();
 
         LinkedList<String> testingData = new LinkedList<String>();
+        
         FileManager.readIntoLinkedList("positiveTesting.txt", testingData);
         naiveBayes.classifyDocuments(testingData, 0);
+        
+        FileManager.readIntoLinkedList("negativeTesting.txt", testingData);
+        naiveBayes.classifyDocuments(testingData, 1);
+        
+        FileManager.readIntoLinkedList("neutralTesting.txt", testingData);
+        naiveBayes.classifyDocuments(testingData, 2);
+        
+        naiveBayes.metrics();
     }
 }
