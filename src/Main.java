@@ -10,10 +10,6 @@ public class Main
 
         LinkedList<String> testingData = new LinkedList<String>();
         FileManager.readIntoLinkedList("positiveTesting.txt", testingData);
-
-        for (String line : testingData)
-        {
-            System.out.println(naiveBayes.classify(line));
-        }
+        naiveBayes.classifyDocuments(testingData, 0);
     }
 }

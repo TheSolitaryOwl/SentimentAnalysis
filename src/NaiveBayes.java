@@ -28,7 +28,22 @@ public class NaiveBayes
     private LinkedList<String> negativeDocuments;
     private LinkedList<String> neutralDocuments;
     private HashMap<String, Double> weights = new HashMap<String, Double>();
-    
+
+    // Metrics
+    // Precision = True Positives / True Positives + False Positives
+    // Recall = True Positives / True Positives + False Negatives
+
+    private double percision = 0.0;
+    private double recall = 0.0;
+    private double truePositives = 0.0;
+    private double trueNegatives = 0.0;
+    private double trueNeutrals = 0.0;
+    private double falsePositives = 0.0;
+    private double falseNegatives = 0.0;
+    private double falseNeutrals = 0.0;
+    int control;
+
+
     /*
      * NOTES
      * 
@@ -273,6 +288,7 @@ public class NaiveBayes
     	
     	idf = N / df;
     	tfidf = tf * idf;
+    	tfidf = Math.log(tfidf);
     	
     	if (weights.get(word) == null)
     	{
@@ -294,6 +310,21 @@ public class NaiveBayes
     	return count;
     }
 
+    public void classifyDocuments(LinkedList<String> testingData, int control)
+    {
+        this.control = control;
+
+        for (String line : testingData)
+        {
+            System.out.println(classify(line));
+        }
+
+        percision = truePositives / (truePositives + falsePositives) * 100;
+        recall = truePositives / (truePositives + falseNegatives) * 100;
+        System.out.printf("\nPercision: %2.2f%%\n", percision);
+        System.out.printf("Recall: %2.2f%%\n", recall);
+    }
+
     public String classify(String review)
     {
         String[] token = review.toLowerCase().split(" ");
@@ -302,10 +333,11 @@ public class NaiveBayes
         double neutralProbability = linesNeutral / (linesPositive + linesNegative + linesNeutral);
         double numerator;
         double denominator;
-        double threshold = 0.1;
+        double threshold = 1.5;
 
         for (String word : token)
         {
+            //System.out.println(weights.get(word) + "   " + word);
             if (positiveFreq.get(word) == null)
             {
             	positiveProbability *= 0.1;
@@ -345,16 +377,49 @@ public class NaiveBayes
         //System.out.println("Negative: " + negativeProbability);
         System.out.println();
         System.out.println("Input: " + review);
-        System.out.printf("Positive: %.10f%% \n", positiveProbability * 100.00);
-        System.out.printf("Neutral : %.10f%% \n", neutralProbability * 100.00);
-        System.out.printf("Negative: %.10f%% \n", negativeProbability * 100.00);        
+        //System.out.printf("Positive: %.10f%% \n", positiveProbability * 100.00);
+        //System.out.printf("Neutral : %.10f%% \n", neutralProbability * 100.00);
+        //System.out.printf("Negative: %.10f%% \n", negativeProbability * 100.00);
 
         if (positiveProbability > negativeProbability && positiveProbability > neutralProbability)
+        {
+            if (control == 0)
+            {
+                truePositives++;
+                falseNegatives++;
+            }
+            else
+            {
+                falsePositives++;
+            }
             return "Classification: Positive";
+        }
         else if (negativeProbability > positiveProbability && negativeProbability > neutralProbability)
-        	return "Classification: Negative";
+        {
+            if (control == 1)
+            {
+                trueNegatives++;
+                falseNegatives++;
+            }
+            else
+            {
+                falsePositives++;
+            }
+            return "Classification: Negative";
+        }
         else if (neutralProbability > positiveProbability && neutralProbability > negativeProbability)
-        	return "Classification: Neutral";
+        {
+            if (control == 2)
+            {
+                truePositives++;
+                falseNegatives++;
+            }
+            else
+            {
+                falsePositives++;
+            }
+            return "Classification: Neutral";
+        }
         else
         	return null;
     }
