@@ -33,11 +33,11 @@ public class NaiveBayes
     // Precision = True Positives / True Positives + False Positives
     // Recall = True Positives / True Positives + False Negatives
 
-    private double percision = 0.0;
+    private double precision = 0.0;
     private double recall = 0.0;
-    private double posPercision = 0.0;
-    private double neuPercision = 0.0;
-    private double negPercision = 0.0;
+    private double posPrecision = 0.0;
+    private double neuPrecision = 0.0;
+    private double negPrecision = 0.0;
     private double posRecall = 0.0;
     private double neuRecall = 0.0;
     private double negRecall = 0.0;
@@ -47,7 +47,7 @@ public class NaiveBayes
     private double falsePositives = 0.0;
     private double falseNegatives = 0.0;
     private double falseNeutrals = 0.0;
-    int control;
+    int control; // for telling the program which class is being tested. 0 = positive, 1 = negative, 2 = neutral
 
 
     /*
@@ -60,6 +60,7 @@ public class NaiveBayes
      * 
      */
 
+    // constructor for reading the training data, storing frequency, and calculating weights
     public NaiveBayes() throws IOException
     {
         File positiveFile = new File("positiveTraining.txt");
@@ -73,7 +74,8 @@ public class NaiveBayes
         //System.out.println("Positive lines: " + linesPositive);
         //System.out.println("Negative lines: " + linesNegative);
     }
-
+    
+    // calculating frequency of positive words and incrementing various variables for later calculations
     private void positiveFreq(File file) throws IOException
     {
         positiveN = 0;
@@ -128,6 +130,7 @@ public class NaiveBayes
         fr.close();
     }
 
+ // calculating frequency of negative words and incrementing various variables for later calculations
     private void negativeFreq(File file) throws IOException
     {
         negativeN = 0;
@@ -182,6 +185,7 @@ public class NaiveBayes
         fr.close();
     }
 
+ // calculating frequency of neutral words and incrementing various variables for later calculations
     private void neutralFreq(File file) throws IOException
     {
         neutralN = 0;
@@ -323,7 +327,7 @@ public class NaiveBayes
 
         for (String line : testingData)
         {
-            System.out.println(classify(line));
+            classify(line);
         }
 
         
@@ -379,14 +383,15 @@ public class NaiveBayes
 
         //System.out.println("Positive: " + positiveProbability);
         //System.out.println("Negative: " + negativeProbability);
-        System.out.println();
-        System.out.println("Input: " + review);
+        //System.out.println();
+        //System.out.println("Input: " + review);
         //System.out.printf("Positive: %.10f%% \n", positiveProbability * 100.00);
         //System.out.printf("Neutral : %.10f%% \n", neutralProbability * 100.00);
         //System.out.printf("Negative: %.10f%% \n", negativeProbability * 100.00);
 
         if (positiveProbability > negativeProbability && positiveProbability > neutralProbability)
         {
+        	// if statements for precision and recall metrics
         	if (control == 0)
         	{
         		truePositives++;
@@ -399,10 +404,13 @@ public class NaiveBayes
         	{
         		falseNeutrals++;
         	}
-            return "Classification: Positive";
+        	
+        	
+            return "Positive";
         }
         else if (negativeProbability > positiveProbability && negativeProbability > neutralProbability)
         {
+        	// if statements for precision and recall metrics
         	if (control == 0)
         	{
         		falsePositives++;
@@ -415,10 +423,13 @@ public class NaiveBayes
         	{
         		falseNeutrals++;
         	}
-            return "Classification: Negative";
+        	
+        	
+            return "Negative";
         }
         else if (neutralProbability > positiveProbability && neutralProbability > negativeProbability)
         {
+        	// if statements for precision and recall metrics
         	if (control == 0)
         	{
         		falsePositives++;
@@ -431,25 +442,29 @@ public class NaiveBayes
         	{
         		trueNeutrals++;
         	}
-            return "Classification: Neutral";
+        	
+        	
+            return "Neutral";
         }
         else
         	return null;
     }
     
-    public void metrics()
+    public String metrics()
     {
-    	posPercision = truePositives / (truePositives + falsePositives);
-        neuPercision = trueNeutrals/ (trueNeutrals + falseNeutrals);
-        negPercision = trueNegatives / (trueNegatives + falseNegatives);
-        percision = (posPercision + neuPercision + negPercision) / 3;
-        percision *= 100;
+    	posPrecision = truePositives / (truePositives + falsePositives);
+        neuPrecision = trueNeutrals/ (trueNeutrals + falseNeutrals);
+        negPrecision = trueNegatives / (trueNegatives + falseNegatives);
+        precision = (posPrecision + neuPrecision + negPrecision) / 3;
+        precision *= 100;
         posRecall = truePositives / (truePositives + falseNegatives + falseNeutrals);
         neuRecall = trueNeutrals / (trueNeutrals + falseNegatives + falsePositives);
         negRecall = trueNegatives / (trueNegatives + falsePositives + falseNeutrals);
         recall = (posRecall + neuRecall + negRecall) / 3;
         recall *= 100;
-        System.out.printf("\nPercision: %2.2f%%\n", percision);
-        System.out.printf("Recall: %2.2f%%\n", recall);
+        //System.out.printf("\nPercision: %2.2f%%\n", precision);
+        //System.out.printf("Recall: %2.2f%%\n", recall);
+        String output = String.format("Precision: %f%%\n | Recall: %f%%", precision, recall);
+        return output;
     }
 }
