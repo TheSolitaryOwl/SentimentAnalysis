@@ -47,7 +47,7 @@ public class NaiveBayes
     private double falsePositives = 0.0;
     private double falseNegatives = 0.0;
     private double falseNeutrals = 0.0;
-    int control; // for telling the program which class is being tested. 0 = positive, 1 = negative, 2 = neutral
+    private int control; // for telling the program which class is being tested. 0 = positive, 1 = negative, 2 = neutral
 
 
     /*
@@ -341,7 +341,7 @@ public class NaiveBayes
         double neutralProbability = linesNeutral / (linesPositive + linesNegative + linesNeutral);
         double numerator;
         double denominator;
-        double threshold = 1.5;
+        double threshold = 1.75;
 
         for (String word : token)
         {
@@ -464,7 +464,7 @@ public class NaiveBayes
         recall *= 100;
         //System.out.printf("\nPercision: %2.2f%%\n", precision);
         //System.out.printf("Recall: %2.2f%%\n", recall);
-        String output = String.format("Precision: %f%%\n | Recall: %f%%", precision, recall);
+        String output = String.format("Precision: %2.3f%%\n | Recall: %2.3f%%", precision, recall);
         return output;
     }
 }
