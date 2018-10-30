@@ -47,7 +47,7 @@ public class NaiveBayes
     private double falsePositives = 0.0;
     private double falseNegatives = 0.0;
     private double falseNeutrals = 0.0;
-    private int control; // for telling the program which class is being tested. 0 = positive, 1 = negative, 2 = neutral
+    int control; // for telling the program which class is being tested. 0 = positive, 1 = negative, 2 = neutral
 
 
     /*

@@ -90,6 +90,7 @@ public class GUI {
         
         FileManager.readIntoLinkedList("neutralTesting.txt", testingData);
         naiveBayes.classifyDocuments(testingData, 2);
+        naiveBayes.control = -1;
         
         label.setText(naiveBayes.metrics());
 		
