@@ -405,8 +405,9 @@ public class NaiveBayes
         		falseNeutrals++;
         	}
         	
-        	
-            return "Positive";
+        	String output = String.format("Positive | Pos: %2.3f%% Neu: %2.3f%% Neg: %2.3f%%", positiveProbability * 100, 
+        			neutralProbability * 100, negativeProbability * 100);
+            return output;
         }
         else if (negativeProbability > positiveProbability && negativeProbability > neutralProbability)
         {
@@ -424,8 +425,9 @@ public class NaiveBayes
         		falseNeutrals++;
         	}
         	
-        	
-            return "Negative";
+        	String output = String.format("Negative | Pos: %2.3f%% Neu: %2.3f%% Neg: %2.3f%%", positiveProbability * 100, 
+        			neutralProbability * 100, negativeProbability * 100);
+            return output;
         }
         else if (neutralProbability > positiveProbability && neutralProbability > negativeProbability)
         {
@@ -443,8 +445,9 @@ public class NaiveBayes
         		trueNeutrals++;
         	}
         	
-        	
-            return "Neutral";
+        	String output = String.format("Neutral | Pos: %2.3f%% Neu: %2.3f%% Neg: %2.3f%%", positiveProbability * 100, 
+        			neutralProbability * 100, negativeProbability * 100);
+            return output;
         }
         else
         	return null;
